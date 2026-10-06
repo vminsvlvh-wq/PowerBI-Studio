@@ -1,0 +1,82 @@
+import streamlit as st
+import google.generativeai as genai
+
+# إعدادات الصفحة الأساسية
+st.set_page_config(page_title="Power BI All-in-One Studio", page_icon="⚡", layout="wide")
+
+st.title("⚡ منصة Power BI الشاملة (AI Studio Assistant)")
+st.write("أداة واحدة متكاملة لتغطية كل احتياجاتك في هندسة البيانات، معادلات DAX، وتصميم التقارير.")
+
+# التحقق من مفتاح الـ API
+try:
+    api_key = st.secrets["GEMINI_API_KEY"]
+    genai.configure(api_key=api_key)
+    
+    # تهيئة الموديل الشامل بتعليمات مهندس باور بي آي
+    model = genai.GenerativeModel(
+        model_name="gemini-3.8-flash",
+        system_instruction="You are an elite Microsoft Power BI Solutions Architect, Senior DAX Engineer, and BI UI/UX Specialist. Provide production-grade DAX, clean Power Query M-code, Star Schema guidance, and Power BI Theme JSON codes."
+    )
+
+    # تقسيم التطبيق إلى تبويبات (Tabs) لكل وظيفة
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📊 خبير الـ DAX والنماذج", 
+        "⚙️ تنظيف البيانات (Power Query)", 
+        "🎨 توليد تصميمات الـ Themes", 
+        "📐 تخطيط لوحات التحكم (UI/UX)"
+    ])
+
+    # 1. تبويب الـ DAX
+    with tab1:
+        st.header("مساعد معادلات DAX ونمذجة البيانات")
+        dax_query = st.text_area("اطرح استفسارك عن معادلة DAX أو هيكلة الجداول:", placeholder="مثال: كيف أحسب المبيعات التراكمية YTD مع استبعاد فرع معين؟")
+        if st.button("توليد كود DAX"):
+            if dax_query.strip():
+                with st.spinner("جاري كتابة الكود وتحليل سياق التصفية..."):
+                    res = model.generate_content(f"DAX & Modeling Request: {dax_query}")
+                    st.success("النتيجة:")
+                    st.markdown(res.text)
+            else:
+                st.warning("الرجاء كتابة السؤال أولاً.")
+
+    # 2. تبويب الـ Power Query
+    with tab2:
+        st.header("مساعد Power Query وتوليد أكواد M")
+        pq_query = st.text_area("صف عملية معالجة البيانات التي تحتاجها:", placeholder="مثال: كيف أفصل رقم الفاتورة عن التاريخ في عمود نصي واحد؟")
+        if st.button("توليد كود Power Query"):
+            if pq_query.strip():
+                with st.spinner("جاري كتابة كود M-Code..."):
+                    res = model.generate_content(f"Power Query M-Code Request: {pq_query}")
+                    st.success("النتيجة:")
+                    st.markdown(res.text)
+            else:
+                st.warning("الرجاء كتابة الطلب أولاً.")
+
+    # 3. تبويب الـ Themes
+    with tab3:
+        st.header("مُصمم ألوان وتنسيقات الـ Themes")
+        theme_query = st.text_area("حدد الهوية أو الألوان المطلوبة للتقرير:", placeholder="مثال: ألوان تناسب قطاع مالي (أزرق داكن ورمادي مع أخضر للنجاح)")
+        if st.button("توليد كود Theme JSON"):
+            if theme_query.strip():
+                with st.spinner("جاري تصميم وتوليد ملف JSON..."):
+                    res = mسodel.generate_content(f"Generate Power BI Theme JSON code for: {theme_query}")
+                    st.success("النتيجة:")
+                    st.markdown(res.text)
+            else:
+                st.warning("الرجاء تحديد متطلبات التصميم أولاً.")
+
+    # 4. تبويب الـ UI/UX والتخطيط
+    with tab4:
+        st.header("مخطط واجهات وتجربة المستخدم (UI/UX)")
+        ui_query = st.text_area("ما هو التقرير الذي تريد تصميمه؟", placeholder="مثال: تقرير مبيعات فروع يحتاج لتخطيط شاشة وترتيب KPIs")
+        if st.button("الحصول على الهيكلة والتصميم"):
+            if ui_query.strip():
+                with st.spinner("جاري التخطيط وتحديد أفضل ممارسات العرض..."):
+                    res = model.generate_content(f"Dashboard UI/UX and Layout Architecture Request: {ui_query}")
+                    st.success("النتيجة:")
+                    st.markdown(res.text)
+            else:s
+                st.warning("الرجاء وصف التقرير أولاً.")
+
+except Exception as e:
+    st.error("الرجاء التحقق من إعدادات مفتاح الـ API في المنصة.")
